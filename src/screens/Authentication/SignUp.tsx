@@ -1,92 +1,99 @@
-import { useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CTA from "../../components/CTA";
+import ErrorText from "../../components/ErrorText";
 import Field from "../../components/Field";
+import LogoHeader from "../../components/LogoHeader";
+import { toastError } from "../../components/Toast";
 import { SignUpModel } from "../../models/signupModel";
 import { useSignUpMutation } from "../../services/signupService";
-
-const initialSignUpFormData: SignUpModel = {
-  email: "",
-  firstName: "",
-  lastName: "",
-  password: "",
-};
+import { signUpValidationSchema } from "../../utils/validation";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [signupFormData, setSignUpFormData] = useState<SignUpModel>(
-    initialSignUpFormData
-  );
   const [signUpMutation] = useSignUpMutation();
+  const [signUpError, setSignUpError] = useState("")
 
-  const handleChange = (event: any) => {
-    setSignUpFormData({
-      ...signupFormData,
-      [event.target.name]: event.target.value,
-    });
-  };
+  const { register, reset, handleSubmit, formState: { errors }, watch } = useForm<SignUpModel>({ mode: 'onChange', resolver: yupResolver(signUpValidationSchema) })
 
-  const handleSignUp = (event: any) => {
-    event.preventDefault();
-    signUpMutation(signupFormData)
+  useEffect(() => {
+    if (watch('email')) {
+      setSignUpError("")
+    }
+  }, [watch('email')])
+
+
+  const handleSignUp = (values: SignUpModel) => {
+    signUpMutation(values)
       .unwrap()
       .then((user) => {
-        setSignUpFormData(initialSignUpFormData);
         navigate("/home");
+        reset()
+      }).catch((err) => {
+        if (err && err.data) {
+          setSignUpError(err.data.message)
+        }
+        else {
+          toastError("Something went wrong !")
+        }
       });
   };
 
   return (
     <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
+
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-xl">
+        <LogoHeader />
         <h1 className="text-3xl font-semibold text-center ">SignUp</h1>
-        <form className="mt-6">
-          <div className="mb-2">
+        <form className="mt-6" onSubmit={handleSubmit(handleSignUp)}>
+          <div className="mb-5">
             <label className="block text-sm font-semibold text-gray-800">
               First Name
             </label>
             <Field
+              {...register("firstName")}
               type="text"
               name="firstName"
-              value={signupFormData.firstName}
-              onChange={handleChange}
             />
+            <ErrorText err={errors.firstName?.message} />
           </div>
-          <div className="mb-2">
+          <div className="mb-5">
             <label className="block text-sm font-semibold text-gray-800">
               Last Name
             </label>
             <Field
+              {...register("lastName")}
               type="text"
               name="lastName"
-              value={signupFormData.lastName}
-              onChange={handleChange}
             />
+            <ErrorText err={errors.lastName?.message} />
           </div>
-          <div className="mb-2">
+          <div className="mb-5">
             <label className="block text-sm font-semibold text-gray-800">
               Email
             </label>
             <Field
+              {...register("email")}
               type="email"
               name="email"
-              value={signupFormData.email}
-              onChange={handleChange}
             />
+            <ErrorText err={errors.email?.message} />
           </div>
-          <div className="mb-2">
+          <div className="mb-5">
             <label className="block text-sm font-semibold text-gray-800">
               Password
             </label>
             <Field
+              {...register("password")}
               type="password"
               name="password"
-              value={signupFormData.password}
-              onChange={handleChange}
             />
+            <ErrorText err={errors.password?.message || signUpError} />
           </div>
           <div className="mt-6">
-            <CTA onClick={handleSignUp}>Sign Up</CTA>
+            <CTA type={"submit"}>Sign Up</CTA>
           </div>
         </form>
 
