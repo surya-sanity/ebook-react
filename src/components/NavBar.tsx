@@ -4,10 +4,14 @@ import { useSignOutHook } from "../hooks/signOutHook";
 import { useGetCartQuery } from "../services/cartApi";
 import { useGetMyBooksQuery } from "../services/userBookApi";
 import { useGetWalletQuery } from "../services/walletApi";
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { resetNumberOfDays } from "../store/reducers/cartReducer";
 import LOGO from "../Assets/logo.png";
 import SearchBar from "./SearchBar";
+import { getCurrentUser } from "../store/reducers/userReducer";
+import { Role } from "../models/userModel";
+import { FaPlus, FaSignOutAlt } from "react-icons/fa";
+
 
 export default function NavBar() {
   const [navbar, setNavbar] = useState(false);
@@ -15,6 +19,8 @@ export default function NavBar() {
   const { data: wallet } = useGetWalletQuery();
   const { data: cart } = useGetCartQuery();
   useGetMyBooksQuery();
+
+  const currentUser = useAppSelector(getCurrentUser)
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -38,6 +44,7 @@ export default function NavBar() {
                       <img src={LOGO} alt="Ebooks" className="object-fill" />
                     </div>
                     <span className="text-2xl font-bold">EBOOKS</span>
+                    {currentUser.role === Role.Admin && <div className="pl-3 text-sm font-bold">ADMIN</div>}
                   </div>
                 </span>
                 <div className="md:hidden">
@@ -85,12 +92,12 @@ export default function NavBar() {
             ) : null}
             <div>
               <div
-                className={`flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${
-                  navbar ? "block" : "hidden"
-                }`}
+                className={`flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${navbar ? "block" : "hidden"
+                  }`}
               >
                 <ul className="items-center justify-center space-y-8 md:flex md:space-x-12 md:space-y-0">
-                  <li
+
+                  {currentUser.role === Role.User && <li
                     className="text-gray-600 hover:text-blue-600 cursor-pointer"
                     onClick={() => {
                       navigate("/myBooks");
@@ -99,8 +106,8 @@ export default function NavBar() {
                     <span className="block py-2 pr-4 pl-5 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                       My Books
                     </span>
-                  </li>
-                  <li
+                  </li>}
+                  {currentUser.role === Role.User && <li
                     className="text-gray-600 hover:text-blue-600 cursor-pointer flex flex-row"
                     onClick={() => {
                       dispatch(resetNumberOfDays());
@@ -115,8 +122,8 @@ export default function NavBar() {
                         {cart?.items?.length}
                       </div>
                     }
-                  </li>
-                  <li
+                  </li>}
+                  {currentUser.role === Role.User && <li
                     className="text-white  flex flex-row bg-purple-700 px-2 py-1 rounded-lg cursor-pointer"
                     onClick={() => {
                       navigate("/wallet");
@@ -125,14 +132,26 @@ export default function NavBar() {
                     <span className="block py-2 pr-4 pl-5  rounded md:border-0 md:p-0 ">
                       Wallet ${wallet?.walletBalance}
                     </span>
-                  </li>
+                  </li>}
+                  {currentUser.role === Role.Admin && <li
+                    className="text-white  flex flex-row bg-purple-700 px-2 py-1 rounded-lg cursor-pointer items-center justify-evenly"
+                    onClick={() => {
+                      navigate("/book");
+                    }}
+                  >
+                    <FaPlus color="white" />
+                    <span className="ml-2 block py-2 pr-4 pl-5  rounded md:border-0 md:p-0 ">
+                      Add Book
+                    </span>
+                  </li>}
                   <li
-                    className="text-gray-600 hover:text-blue-600 cursor-pointer"
+                    className="text-gray-600 hover:text-blue-600 cursor-pointer flex flex-row items-center justify-evenly"
                     onClick={signOut}
                   >
-                    <span className="block py-2 pr-4 pl-5 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                    <span className="mr-2 block py-2 pr-4 pl-5 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                       Logout
                     </span>
+                    <FaSignOutAlt color="black" />
                   </li>
                 </ul>
               </div>

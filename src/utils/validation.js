@@ -36,3 +36,39 @@ export const signUpValidationSchema = yup.object().shape({
     .required("Required")
     .transform((curr, orig) => (orig === null ? "" : curr)),
 });
+
+export const createBookValidation = yup.object().shape({
+  title: yup
+    .string()
+    .max(50, "Title can be max 50 characters long")
+    .required("Required")
+    .transform((curr, orig) => (orig === null ? "" : curr)),
+  author: yup
+    .string()
+    .max(50, "Author name can be max 50 characters long")
+    .required("Required")
+    .transform((curr, orig) => (orig === null ? "" : curr)),
+  shortDescription: yup
+    .string()
+    .required("Required")
+    .transform((curr, orig) => (orig === null ? "" : curr)),
+  longDescription: yup
+    .string()
+    .required("Required")
+    .transform((curr, orig) => (orig === null ? "" : curr)),
+  thumbnailUrl: yup
+    .string()
+    .required("Required")
+    .transform((curr, orig) => (orig === null ? "" : curr)),
+  genre: yup
+    .string()
+    .max(30, "Genre can be max 30 characters long")
+    .required("Required")
+    .transform((curr, orig) => (orig === null ? "" : curr)),
+  pricePerDay: yup
+    .number()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .required("Required")
+    .min(5, "Price should be atleast $5 ")
+    .max(50, "Maximum price per day can be $50 "),
+});

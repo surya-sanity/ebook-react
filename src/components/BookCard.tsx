@@ -10,6 +10,7 @@ import { useDeleteMyBookMutation } from "../services/userBookApi";
 import { useAppSelector } from "../store/hooks";
 import { getMyBooks } from "../store/reducers/bookReducer";
 import { getCart } from "../store/reducers/cartReducer";
+import AdminBookActions from "./AdminBookActions";
 import CTA from "./CTA";
 import Skeleton from "./skeleton";
 import { toastError, toastSuccess } from "./Toast";
@@ -19,10 +20,11 @@ interface BookCardPropType {
   fromMyBooks?: boolean;
   myBookId?: string;
   endDate?: string;
+  isAdmin?: boolean
 }
 
 const BookCard = (prop: BookCardPropType) => {
-  const { bookId, fromMyBooks, myBookId, endDate } = prop;
+  const { bookId, fromMyBooks, myBookId, endDate, isAdmin } = prop;
   const { data: book, isLoading, isError } = useGetBookByIdQuery(bookId);
   const { findExpirationString, isExpired } = useCheckExpiryHook();
 
@@ -49,11 +51,11 @@ const BookCard = (prop: BookCardPropType) => {
     return () => clearInterval(interval);
   }, [fromMyBooks, myBookId, endDate]);
 
-  if (isLoading || isError || !book) {
+  if (isLoading) {
     return <Skeleton />;
   }
 
-  if (bookExpired) {
+  if (isError || !book || bookExpired) {
     return null;
   }
 
@@ -97,7 +99,7 @@ const BookCard = (prop: BookCardPropType) => {
           </span>
         </div>
         <div className="flex flex-row justify-between">
-          {!myBookId && !fromMyBooks && (
+          {!myBookId && !fromMyBooks && !isAdmin && (
             <>
               <div className="px-2 py-4 flex items-center text-sm text-gray-600">
                 <svg
@@ -140,10 +142,13 @@ const BookCard = (prop: BookCardPropType) => {
           )}
           <div className="p-2 w-full flex flex-1">
             {
-              <CardActions
+              !isAdmin ? <CardActions
                 bookId={bookId}
                 myBookId={myBookId ? myBookId : undefined}
-              />
+              /> : null
+            }
+            {
+              isAdmin && <AdminBookActions bookId={bookId} />
             }
           </div>
         </div>

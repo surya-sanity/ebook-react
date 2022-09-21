@@ -1,6 +1,6 @@
 import "./App.css";
 import Login from "./screens/Authentication/Login";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUp from "./screens/Authentication/SignUp";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
@@ -13,6 +13,7 @@ import CartScreen from "./screens/CartScreen";
 import WalletScreen from "./screens/WalletScreen";
 import MyBooks from "./screens/MyBooks";
 import ReadBook from "./screens/ReadBook";
+import ManageBookScreen from "./screens/ManageBook";
 
 const AppContent = () => {
   return (
@@ -26,6 +27,9 @@ const AppContent = () => {
           <Route path="/wallet" element={<WalletScreen />} />
           <Route path="/myBooks" element={<MyBooks />} />
           <Route path="/read/:bookId" element={<ReadBook />} />
+          <Route path="/book" element={<ManageBookScreen />}>
+            <Route path=":id" element={<ManageBookScreen />} />
+          </Route>
         </Route>
       </Routes>
       <AuthVerify />

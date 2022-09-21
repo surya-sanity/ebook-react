@@ -27,7 +27,7 @@ export const bookApi = allApis.injectEndpoints({
         body: { term }
       }),
     }),
-    updateBookById: builder.mutation<BookModel, { id: string, book: BookModel }>({
+    updateBookById: builder.mutation<BookModel, { id: string, book: Partial<BookModel> }>({
       query: ({ book, id }) => {
         return {
           url: `api/books/${id}`,
@@ -37,7 +37,7 @@ export const bookApi = allApis.injectEndpoints({
       },
       invalidatesTags: ['Book']
     }),
-    deleteBookById: builder.mutation<BookModel, { id: string }>({
+    deleteBookById: builder.mutation<any, { id: string }>({
       query: ({ id }) => {
         return {
           url: `api/books/${id}`,
