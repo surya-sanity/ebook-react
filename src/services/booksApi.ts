@@ -26,7 +26,6 @@ export const bookApi = allApis.injectEndpoints({
     }),
     getBookById: builder.query<BookModel, string>({
       query: (id) => `api/books/id/${id}`,
-      providesTags: ['Book']
     }),
     getBooksByTitle: builder.mutation<BookModel[], { term: string }>({
       query: ({ term }) => ({
