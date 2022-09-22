@@ -21,10 +21,11 @@ interface BookCardPropType {
   myBookId?: string;
   endDate?: string;
   isAdmin?: boolean
+  margin?: boolean
 }
 
 const BookCard = (prop: BookCardPropType) => {
-  const { bookId, fromMyBooks, myBookId, endDate, isAdmin } = prop;
+  const { bookId, fromMyBooks, myBookId, endDate, isAdmin, margin } = prop;
   const { data: book, isLoading, isError } = useGetBookByIdQuery(bookId);
   const { findExpirationString, isExpired } = useCheckExpiryHook();
 
@@ -60,7 +61,7 @@ const BookCard = (prop: BookCardPropType) => {
   }
 
   return (
-    <div className={`flex flex-wrap `}>
+    <div className={`flex flex-wrap ${margin ? "mb-5 mr-5" : ""}`}>
       <div className="c-card block relative bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden h-[30rem] w-[13rem] ">
         {expireString && (
           <div className="absolute top-[20.5rem] right-2 z-10 bg-pink-100 text-pink-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-pink-200 dark:text-pink-900 flex flex-row justify-end">

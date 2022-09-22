@@ -7,6 +7,7 @@ import { getBooks } from "../store/reducers/bookReducer";
 const AdminHome = () => {
   useGetAllBooksQuery();
   const books = useAppSelector(getBooks);
+  const isBooksEmpty = books.length === 0;
 
   if (!books) {
     return <Skeleton />;
@@ -14,13 +15,16 @@ const AdminHome = () => {
 
   return (
     <>
-      <div className="flex flex-row flex-wrap">
+      {isBooksEmpty && <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl w-full flex justify-center items-center">No books for now</h1>
+      </div>}
+      {!isBooksEmpty && <div className="flex flex-row flex-wrap">
         {books?.map((book) => (
-          <div className="mr-5 mb-5" key={book.id}>
-            <BookCard bookId={book.id} isAdmin={true} />
+          <div key={book.id}>
+            <BookCard bookId={book.id} isAdmin={true} margin={true} />
           </div>
         ))}
-      </div>
+      </div>}
     </>
   );
 };

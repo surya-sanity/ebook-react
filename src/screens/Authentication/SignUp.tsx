@@ -83,7 +83,7 @@ const SignUp = () => {
           </div>
           {/* OPTIONAL FOR ADMIN ROLE USER */}
 
-          {/* <div className="mb-5"> 
+          {/* <div className="mb-5">
             <label className="block text-sm font-semibold text-gray-800">
               Role
             </label>

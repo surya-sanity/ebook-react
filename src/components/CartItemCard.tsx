@@ -30,7 +30,7 @@ const CartItemCard = (props: CartItemCartPropType) => {
 
   return (
     <>
-      <div className="mr-5 mb-5" key={bookId}>
+      <div className="mb-5 mr-5 flex flex-col items-center justify-center" key={bookId}>
         <BookCard bookId={bookId} />
         <div>
           <div className="flex flex-col mt-2">

@@ -11,7 +11,11 @@ import SearchBar from "./SearchBar";
 import { getCurrentUser } from "../store/reducers/userReducer";
 import { Role } from "../models/userModel";
 import { FaPlus, FaSignOutAlt } from "react-icons/fa";
-
+import { AiOutlineDelete } from "react-icons/ai";
+import { getBooks } from "../store/reducers/bookReducer";
+import { useCreateBulkBooksMutation, useDeleteAllBooksMutation } from "../services/booksApi";
+import { toastError, toastSuccess } from "./Toast";
+import { booksJson } from '../Assets/books'
 
 export default function NavBar() {
   const [navbar, setNavbar] = useState(false);
@@ -25,8 +29,37 @@ export default function NavBar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const books = useAppSelector(getBooks);
+
+  const [createManyBooks] = useCreateBulkBooksMutation()
+  const [deleteAllBooks] = useDeleteAllBooksMutation()
 
   const showSearchBar = pathname === "/home";
+
+  const handleBulkBooksCreate = () => {
+    const booksToCreate = booksJson
+    createManyBooks(booksToCreate).unwrap().then((result) => {
+      toastSuccess("Books created successfully !")
+    }).catch((err) => {
+      if (err && err.data) {
+        toastError(err.data.message)
+      } else {
+        toastError("Something went wrong !")
+      }
+    })
+  }
+
+  const handleBulkBooksDelete = () => {
+    deleteAllBooks().unwrap().then((result) => {
+      toastSuccess("Deleted all books !")
+    }).catch((err) => {
+      if (err && err.data) {
+        toastError(err.data.message)
+      } else {
+        toastError("Something went wrong !")
+      }
+    })
+  }
 
   return (
     <>
@@ -118,7 +151,7 @@ export default function NavBar() {
                       Cart
                     </span>
                     {
-                      <div className="ml-1 bg-purple-700 rounded-full p-1 flex justify-center items-center text-white text-xs mx-auto w-auto px-2">
+                      <div className={`${cart?.items?.length ? "flex" : "hidden"}  ml-1 bg-purple-700 rounded-full p-1  justify-center items-center text-white text-xs mx-auto w-auto px-2`}>
                         {cart?.items?.length}
                       </div>
                     }
@@ -142,6 +175,28 @@ export default function NavBar() {
                     <FaPlus color="white" />
                     <span className="ml-2 block py-2 pr-4 pl-5  rounded md:border-0 md:p-0 ">
                       Add Book
+                    </span>
+                  </li>}
+                  {currentUser.role === Role.Admin && books.length === 0 && <li
+                    className="text-white  flex flex-row bg-purple-700 px-2 py-1 rounded-lg cursor-pointer items-center justify-evenly"
+                    onClick={() => {
+                      handleBulkBooksCreate()
+                    }}
+                  >
+                    <FaPlus color="white" />
+                    <span className="ml-2 block py-2 pr-4 pl-5  rounded md:border-0 md:p-0 ">
+                      Bulk books
+                    </span>
+                  </li>}
+                  {currentUser.role === Role.Admin && books.length !== 0 && <li
+                    className="text-white  flex flex-row bg-red-700 px-2 py-1 rounded-lg cursor-pointer items-center justify-evenly"
+                    onClick={() => {
+                      handleBulkBooksDelete()
+                    }}
+                  >
+                    <AiOutlineDelete color="white" />
+                    <span className="ml-2 block py-2 pr-4 pl-5  rounded md:border-0 md:p-0 ">
+                      Delete all books
                     </span>
                   </li>}
                   <li

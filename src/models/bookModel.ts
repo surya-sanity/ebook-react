@@ -8,7 +8,7 @@ export interface BookModel extends CommonModel {
   thumbnailUrl: string,
   shortDescription: string,
   longDescription: string,
-  published: string,
+  published: boolean,
   author: string,
   genre: string,
   pricePerDay: number,

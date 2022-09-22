@@ -25,12 +25,13 @@ const MyBooks = () => {
       )}
       <div className="flex flex-row flex-wrap mt-10">
         {myBooks.map((myBook) => (
-          <div className="mr-5 mb-5" key={myBook.id}>
+          <div key={myBook.id}>
             <BookCard
               bookId={myBook.bookId}
               fromMyBooks={true}
               myBookId={myBook.id}
               endDate={myBook.endDate}
+              margin={true}
             />
           </div>
         ))}
