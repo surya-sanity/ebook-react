@@ -1,3 +1,3 @@
 export const Config = {
-  API_URL: 'https://ebook-server.onrender.com/',
+  API_URL: 'https://real-cyan-lovebird-coat.cyclic.app/',
 }
