@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useSignOutHook } from "../hooks/signOutHook";
 import { useGetCartQuery } from "../services/cartApi";
-import { useGetMyBooksQuery } from "../services/userBookApi";
+import { useDeleteAllUsersBooksAdminMutation, useGetMyBooksQuery } from "../services/userBookApi";
 import { useGetWalletQuery } from "../services/walletApi";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { resetNumberOfDays } from "../store/reducers/cartReducer";
@@ -12,7 +12,7 @@ import { getAllUsers, getCurrentUser } from "../store/reducers/userReducer";
 import { Role } from "../models/userModel";
 import { FaPlus, FaSignOutAlt } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
-import { getBooks } from "../store/reducers/bookReducer";
+import { getAllUsersBookAdmin, getBooks } from "../store/reducers/bookReducer";
 import { useCreateBulkBooksMutation, useDeleteAllBooksMutation } from "../services/booksApi";
 import { toastError, toastSuccess } from "./Toast";
 import { booksJson } from '../Assets/books'
@@ -32,10 +32,12 @@ export default function NavBar() {
   const dispatch = useAppDispatch();
   const books = useAppSelector(getBooks);
   const allUsers = useAppSelector(getAllUsers);
+  const allUsersBooksAdmin = useAppSelector(getAllUsersBookAdmin);
 
   const [createManyBooks] = useCreateBulkBooksMutation()
   const [deleteAllBooks] = useDeleteAllBooksMutation()
   const [deleteAllUsers] = useDeleteAllUsersMutation()
+  const [deleteAllUserBooksAdmin] = useDeleteAllUsersBooksAdminMutation()
 
   const showSearchBar = (pathname === "/home" && currentUser.role === Role.User) || (pathname === "/allBooks" && currentUser.role === Role.Admin);
 
@@ -67,6 +69,18 @@ export default function NavBar() {
   const handleDeleteAllUsers = () => {
     deleteAllUsers().unwrap().then((result) => {
       toastSuccess("Deleted all Users !")
+    }).catch((err) => {
+      if (err && err.data) {
+        toastError(err.data.message)
+      } else {
+        toastError("Something went wrong !")
+      }
+    })
+  }
+
+  const handleDeleteAllUsersBooksAdmin = () => {
+    deleteAllUserBooksAdmin().unwrap().then((result) => {
+      toastSuccess("Deleted all users books !")
     }).catch((err) => {
       if (err && err.data) {
         toastError(err.data.message)
@@ -223,6 +237,17 @@ export default function NavBar() {
                     <AiOutlineDelete color="white" />
                     <span className="ml-2 block py-2 pr-4 pl-5  rounded md:border-0 md:p-0 ">
                       All Users
+                    </span>
+                  </li>}
+                  {currentUser.role === Role.Admin && allUsersBooksAdmin?.length !== 0 && pathname === "/allUserBooks" && <li
+                    className="text-white  flex flex-row bg-red-700 px-2 py-1 rounded-lg cursor-pointer items-center justify-evenly"
+                    onClick={() => {
+                      handleDeleteAllUsersBooksAdmin()
+                    }}
+                  >
+                    <AiOutlineDelete color="white" />
+                    <span className="ml-2 block py-2 pr-4 pl-5  rounded md:border-0 md:p-0 ">
+                      All UsersBooks
                     </span>
                   </li>}
                   <li

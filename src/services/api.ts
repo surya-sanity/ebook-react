@@ -3,6 +3,7 @@ import { Config } from '../config';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: Config.API_URL,
+  mode: 'cors',
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as any).token.token;
 

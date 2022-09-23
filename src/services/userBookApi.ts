@@ -16,10 +16,23 @@ export const userBookApi = allApis.injectEndpoints({
       query: () => `api/userBook/getAll`,
       providesTags: ['UserBook']
     }),
+    getAllUsersBooksAdmin: builder.query<MyBook[], void>({
+      query: () => `api/userBook/admin/all`,
+      providesTags: ['UserBook']
+    }),
     deleteMyBook: builder.mutation<any, { myBookId: string }>({
       query: ({ myBookId }) => {
         return {
-          url: `api/userBook/${myBookId}`,
+          url: `api/userBook/deleteOne/${myBookId}`,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: ['UserBook']
+    }),
+    deleteAllUsersBooksAdmin: builder.mutation<any, void>({
+      query: () => {
+        return {
+          url: `api/userBook/deleteAll`,
           method: 'DELETE',
         };
       },
@@ -28,4 +41,4 @@ export const userBookApi = allApis.injectEndpoints({
   })
 });
 
-export const { useCreateUserBookMutation, useGetMyBooksQuery, useDeleteMyBookMutation } = userBookApi;
+export const { useCreateUserBookMutation, useGetMyBooksQuery, useDeleteMyBookMutation, useDeleteAllUsersBooksAdminMutation, useGetAllUsersBooksAdminQuery } = userBookApi;

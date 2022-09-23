@@ -21,12 +21,6 @@ const AdminDash = () => {
         Books
       </div>
       <div className="rounded-lg shadow-md bg-white p-10 flex flex-col gap-y-5 items-center justify-center cursor-pointer"
-        onClick={() => { navigate("/allCartItems") }}
-      >
-        <FaCartPlus size={100} />
-        Cart Items
-      </div>
-      <div className="rounded-lg shadow-md bg-white p-10 flex flex-col gap-y-5 items-center justify-center cursor-pointer"
         onClick={() => { navigate("/allUserBooks") }}
       >
         <FaRegBookmark size={100} />

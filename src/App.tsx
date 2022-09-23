@@ -17,7 +17,6 @@ import AllUsers from "./screens/Admin/AllUsers";
 import AdminDash from "./screens/Admin/AdminDash";
 import ManageBookScreen from "./screens/Admin/ManageBook";
 import AdminAllBooks from "./screens/Admin/AdminAllBooks";
-import AllCartItems from "./screens/Admin/AllCartItems";
 import AllUserBooks from "./screens/Admin/AllUserBooks";
 
 const AppContent = () => {
@@ -33,7 +32,6 @@ const AppContent = () => {
           <Route path="/adminDash" element={<AdminDash />} />
           <Route path="/allUsers" element={<AllUsers />} />
           <Route path="/allBooks" element={<AdminAllBooks />} />
-          <Route path="/allCartItems" element={<AllCartItems />} />
           <Route path="/allUserBooks" element={<AllUserBooks />} />
           <Route path="/myBooks" element={<MyBooks />} />
           <Route path="/read/:bookId" element={<ReadBook />} />

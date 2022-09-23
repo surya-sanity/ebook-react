@@ -8,11 +8,13 @@ import { userBookApi } from '../../services/userBookApi';
 interface BookReducerInitStateType {
   books: BookModel[]
   myBooks: MyBook[]
+  adminAllUserBooks: MyBook[]
 }
 
 const initialStateValue: BookReducerInitStateType = {
   books: [],
   myBooks: [],
+  adminAllUserBooks: []
 }
 
 export const bookSlice = createSlice({
@@ -37,11 +39,17 @@ export const bookSlice = createSlice({
         state.myBooks = action.payload;
       }
     });
+    builder.addMatcher(userBookApi.endpoints.getAllUsersBooksAdmin.matchFulfilled, (state, action) => {
+      if (action.payload) {
+        state.adminAllUserBooks = action.payload;
+      }
+    });
   }
 });
 
 export const getBooks = (state: RootState): BookModel[] => state.book.books;
 export const getMyBooks = (state: RootState): MyBook[] => state.book.myBooks;
+export const getAllUsersBookAdmin = (state: RootState): MyBook[] => state.book.adminAllUserBooks;
 
 export const { resetBookState } = bookSlice.actions;
 export default bookSlice.reducer;
