@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { resetNumberOfDays } from "../store/reducers/cartReducer";
 import LOGO from "../Assets/logo.png";
 import SearchBar from "./SearchBar";
-import { getCurrentUser } from "../store/reducers/userReducer";
+import { getAllUsers, getCurrentUser } from "../store/reducers/userReducer";
 import { Role } from "../models/userModel";
 import { FaPlus, FaSignOutAlt } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -16,6 +16,7 @@ import { getBooks } from "../store/reducers/bookReducer";
 import { useCreateBulkBooksMutation, useDeleteAllBooksMutation } from "../services/booksApi";
 import { toastError, toastSuccess } from "./Toast";
 import { booksJson } from '../Assets/books'
+import { useDeleteAllUsersMutation } from "../services/userService";
 
 export default function NavBar() {
   const [navbar, setNavbar] = useState(false);
@@ -30,11 +31,13 @@ export default function NavBar() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const books = useAppSelector(getBooks);
+  const allUsers = useAppSelector(getAllUsers);
 
   const [createManyBooks] = useCreateBulkBooksMutation()
   const [deleteAllBooks] = useDeleteAllBooksMutation()
+  const [deleteAllUsers] = useDeleteAllUsersMutation()
 
-  const showSearchBar = pathname === "/home";
+  const showSearchBar = (pathname === "/home" && currentUser.role === Role.User) || (pathname === "/allBooks" && currentUser.role === Role.Admin);
 
   const handleBulkBooksCreate = () => {
     const booksToCreate = booksJson
@@ -52,6 +55,18 @@ export default function NavBar() {
   const handleBulkBooksDelete = () => {
     deleteAllBooks().unwrap().then((result) => {
       toastSuccess("Deleted all books !")
+    }).catch((err) => {
+      if (err && err.data) {
+        toastError(err.data.message)
+      } else {
+        toastError("Something went wrong !")
+      }
+    })
+  }
+
+  const handleDeleteAllUsers = () => {
+    deleteAllUsers().unwrap().then((result) => {
+      toastSuccess("Deleted all Users !")
     }).catch((err) => {
       if (err && err.data) {
         toastError(err.data.message)
@@ -166,7 +181,7 @@ export default function NavBar() {
                       Wallet ${wallet?.walletBalance}
                     </span>
                   </li>}
-                  {currentUser.role === Role.Admin && <li
+                  {currentUser.role === Role.Admin && pathname === "/allBooks" && <li
                     className="text-white  flex flex-row bg-purple-700 px-2 py-1 rounded-lg cursor-pointer items-center justify-evenly"
                     onClick={() => {
                       navigate("/book");
@@ -177,7 +192,7 @@ export default function NavBar() {
                       Add Book
                     </span>
                   </li>}
-                  {currentUser.role === Role.Admin && books.length === 0 && <li
+                  {currentUser.role === Role.Admin && books.length === 0 && pathname === "/allBooks" && <li
                     className="text-white  flex flex-row bg-purple-700 px-2 py-1 rounded-lg cursor-pointer items-center justify-evenly"
                     onClick={() => {
                       handleBulkBooksCreate()
@@ -188,7 +203,7 @@ export default function NavBar() {
                       Bulk books
                     </span>
                   </li>}
-                  {currentUser.role === Role.Admin && books.length !== 0 && <li
+                  {currentUser.role === Role.Admin && books.length !== 0 && pathname === "/allBooks" && <li
                     className="text-white  flex flex-row bg-red-700 px-2 py-1 rounded-lg cursor-pointer items-center justify-evenly"
                     onClick={() => {
                       handleBulkBooksDelete()
@@ -197,6 +212,17 @@ export default function NavBar() {
                     <AiOutlineDelete color="white" />
                     <span className="ml-2 block py-2 pr-4 pl-5  rounded md:border-0 md:p-0 ">
                       Delete all books
+                    </span>
+                  </li>}
+                  {currentUser.role === Role.Admin && allUsers?.length !== 0 && pathname === "/allUsers" && <li
+                    className="text-white  flex flex-row bg-red-700 px-2 py-1 rounded-lg cursor-pointer items-center justify-evenly"
+                    onClick={() => {
+                      handleDeleteAllUsers()
+                    }}
+                  >
+                    <AiOutlineDelete color="white" />
+                    <span className="ml-2 block py-2 pr-4 pl-5  rounded md:border-0 md:p-0 ">
+                      All Users
                     </span>
                   </li>}
                   <li

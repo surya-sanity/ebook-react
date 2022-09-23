@@ -4,6 +4,6 @@ import { baseQueryWithInterceptor } from './api';
 export const allApis = createApi({
   reducerPath: "allApi",
   baseQuery: baseQueryWithInterceptor,
-  tagTypes: ['CurrentUser', 'Book', 'Wallet', 'Cart', 'UserBook', 'Transactions'],
+  tagTypes: ['CurrentUser', 'Book', 'Wallet', 'Cart', 'UserBook', 'Transactions', 'Users'],
   endpoints: (builder) => ({})
 });

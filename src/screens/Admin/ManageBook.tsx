@@ -2,15 +2,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import CTA from "../components/CTA";
-import ErrorText from "../components/ErrorText";
-import Field, { FieldArea } from "../components/Field";
-import Skeleton from "../components/skeleton";
-import { toastError, toastSuccess } from "../components/Toast";
-import { BookModel } from "../models/bookModel";
-import { useCreateBookMutation, useGetBookByIdQuery, useUpdateBookByIdMutation } from "../services/booksApi";
-import { createBookValidation } from "../utils/validation";
-
+import CTA from "../../components/CTA";
+import ErrorText from "../../components/ErrorText";
+import Field, { FieldArea } from "../../components/Field";
+import Skeleton from "../../components/skeleton";
+import { toastError, toastSuccess } from "../../components/Toast";
+import { BookModel } from "../../models/bookModel";
+import { useCreateBookMutation, useGetBookByIdQuery, useUpdateBookByIdMutation } from "../../services/booksApi";
+import { createBookValidation } from "../../utils/validation";
 
 const ManageBookScreen = () => {
   const { id } = useParams()

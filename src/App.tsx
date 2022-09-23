@@ -13,7 +13,12 @@ import CartScreen from "./screens/CartScreen";
 import WalletScreen from "./screens/WalletScreen";
 import MyBooks from "./screens/MyBooks";
 import ReadBook from "./screens/ReadBook";
-import ManageBookScreen from "./screens/ManageBook";
+import AllUsers from "./screens/Admin/AllUsers";
+import AdminDash from "./screens/Admin/AdminDash";
+import ManageBookScreen from "./screens/Admin/ManageBook";
+import AdminAllBooks from "./screens/Admin/AdminAllBooks";
+import AllCartItems from "./screens/Admin/AllCartItems";
+import AllUserBooks from "./screens/Admin/AllUserBooks";
 
 const AppContent = () => {
   return (
@@ -25,6 +30,11 @@ const AppContent = () => {
           <Route path="/home" element={<HomeWrapper />} />
           <Route path="/cart" element={<CartScreen />} />
           <Route path="/wallet" element={<WalletScreen />} />
+          <Route path="/adminDash" element={<AdminDash />} />
+          <Route path="/allUsers" element={<AllUsers />} />
+          <Route path="/allBooks" element={<AdminAllBooks />} />
+          <Route path="/allCartItems" element={<AllCartItems />} />
+          <Route path="/allUserBooks" element={<AllUserBooks />} />
           <Route path="/myBooks" element={<MyBooks />} />
           <Route path="/read/:bookId" element={<ReadBook />} />
           <Route path="/book" element={<ManageBookScreen />}>

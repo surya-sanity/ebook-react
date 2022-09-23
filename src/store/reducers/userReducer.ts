@@ -8,10 +8,12 @@ import { userApi } from '../../services/userService';
 
 interface UserState {
   currentUser: User | undefined
+  allUsers: User[]
 }
 
 const initialStateValue: UserState = {
-  currentUser: undefined
+  currentUser: undefined,
+  allUsers: []
 };
 
 export const userSlice = createSlice({
@@ -41,10 +43,17 @@ export const userSlice = createSlice({
         state.currentUser = action.payload;
       }
     });
+    builder.addMatcher(userApi.endpoints.getAllUsers.matchFulfilled, (state, action) => {
+      if (action.payload) {
+        state.allUsers = action.payload;
+      }
+    });
   }
 });
 
 export const getCurrentUser = (state: RootState): User => state.user.currentUser;
+export const getAllUsers = (state: RootState): User[] => state.user.allUsers;
+
 export const { updateCurrentUser, resetUserReducer } = userSlice.actions;
 
 export default userSlice.reducer;

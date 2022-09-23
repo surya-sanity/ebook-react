@@ -1,10 +1,10 @@
-import BookCard from "../components/BookCard";
-import Skeleton from "../components/skeleton";
-import { useGetAllBooksQuery } from "../services/booksApi";
-import { useAppSelector } from "../store/hooks";
-import { getBooks } from "../store/reducers/bookReducer";
+import BookCard from "../../components/BookCard";
+import Skeleton from "../../components/skeleton";
+import { useGetAllBooksQuery } from "../../services/booksApi";
+import { useAppSelector } from "../../store/hooks";
+import { getBooks } from "../../store/reducers/bookReducer";
 
-const AdminHome = () => {
+const AdminAllBooks = () => {
   useGetAllBooksQuery();
   const books = useAppSelector(getBooks);
   const isBooksEmpty = books.length === 0;
@@ -29,4 +29,4 @@ const AdminHome = () => {
   );
 };
 
-export default AdminHome;
+export default AdminAllBooks;
